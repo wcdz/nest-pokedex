@@ -4,6 +4,7 @@ import { isValidObjectId, Model } from 'mongoose';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -13,8 +14,15 @@ export class PokemonService {
     private readonly pokemonModel: Model<Pokemon>
   ) { }
 
-  public async findAllPokemons() {
-    const result = await this.pokemonModel.find();
+  public async findAllPokemons(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+    const result = await this.pokemonModel.find()
+      .limit(limit)
+      .skip(offset)
+      .sort({
+        no: 1 // Ordenalo de manera ascendente
+      })
+      .select('-__v'); // Para no mandar el v del dato
     return result;
   }
 
