@@ -5,22 +5,25 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+
+    ConfigModule.forRoot(),
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
 
-    MongooseModule.forRoot('mongodb+srv://user_node_cafe:JfV5kBKPpeSQ9bsY@miclustercafe.mfzbd.mongodb.net/nest-pokemon'),
+    MongooseModule.forRoot(process.env.MONGODB_ATLAS),
 
     PokemonModule,
 
     CommonModule,
 
-    SeedModule
-
+    SeedModule,
+    
   ],
 })
 export class AppModule { }
